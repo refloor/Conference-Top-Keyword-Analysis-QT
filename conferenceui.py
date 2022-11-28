@@ -38,11 +38,14 @@ class Stats:
         #二级下拉菜单 会议与年份对应
         self.ui.comboBox_2.currentIndexChanged.connect(self.conference_menu)
 
+        #读取文件
+        self.data = read_csv('./data/conference.csv')
+
     def handleCalc(self):
         year = self.ui.comboBox_1.currentText()
         conference = self.ui.comboBox_2.currentText()
         self.num_keyword = self.ui.lineEdit_8.text()
-        drawgraph = DrawGraph(year,conference,self.banned,self.num_keyword)
+        drawgraph = DrawGraph(year,conference,self.banned,self.num_keyword,self.data)
         drawgraph.compute_word()
         drawgraph.frequent_graph()
         drawgraph.word_cloud_graph()
@@ -84,33 +87,36 @@ class Stats:
             years = {'2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'}
             self.ui.comboBox_1.addItems(years)
         if(conference_index == 1):
-            years = {'2019','2021'}
+            years = {'2013','2015','2017','2019','2021'}
             self.ui.comboBox_1.addItems(years)
         if(conference_index == 2):
             years = {'2020','2021','2022'}
             self.ui.comboBox_1.addItems(years)
         
     def graph_display(self):
-        frequent = QPixmap('frequent.png')
+        frequent = QPixmap('./data/frequent.png')
         self.ui.label.setPixmap(frequent)
-        wordcloud = QPixmap('wordcloud.png')
+        wordcloud = QPixmap('./data/wordcloud.png')
         self.ui.label_2.setPixmap(wordcloud)
 
 
 class DrawGraph:
 
-    def __init__(self,year,conference,banned,num_keyword):
+    def __init__(self,year,conference,banned,num_keyword,data):
         self.year = year
         self.conference = conference
         self.banned = banned
         self.num_keyword = num_keyword
+        self.data = data
 
     def compute_word(self):
-        file_name = self.conference + '_' + self.year + '.csv'
+        rule = "Year == " + self.year + "& Conference == \"" + self.conference+ "\""
         #读取标题
-        df = read_csv('./data/'+file_name,usecols = ['Title'])
+        data_object = self.data.query(rule)
+        title = data_object.iloc[:,0]
+        
         #转换为list
-        title = df.values.tolist()
+        title = title.values.tolist()
 
         # self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
         
@@ -159,7 +165,7 @@ class DrawGraph:
             ax.text(v + 3, i + .25, str(v), color='black', fontsize=10)
         ax.set_xlabel('Frequency')
         ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyword))
-        plt.savefig('frequent.png', transparent=False, bbox_inches='tight')
+        plt.savefig('./data/frequent.png', transparent=False, bbox_inches='tight')
 
     def word_cloud_graph(self):
         # Show the word cloud forming by keywords
@@ -170,7 +176,7 @@ class DrawGraph:
         plt.figure(figsize=(16, 8))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.savefig('wordcloud.png', transparent=False, bbox_inches='tight')
+        plt.savefig('./data/wordcloud.png', transparent=False, bbox_inches='tight')
         # plt.show()
 
 # class WordList:
