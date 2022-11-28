@@ -115,7 +115,6 @@ class DrawGraph:
         # self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
         
         self.keyword_list = []
-
         for i in range(len(title)):
             # print(i, "th paper's title : ", title[i])
             #将数组转换成string 再分割
