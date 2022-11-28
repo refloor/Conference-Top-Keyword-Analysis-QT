@@ -81,7 +81,7 @@ class Stats:
         conference_index= self.ui.comboBox_2.currentIndex()
         self.ui.comboBox_1.clear()
         if(conference_index == 0):
-            years = {'2021'}
+            years = {'2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'}
             self.ui.comboBox_1.addItems(years)
         if(conference_index == 1):
             years = {'2019','2021'}

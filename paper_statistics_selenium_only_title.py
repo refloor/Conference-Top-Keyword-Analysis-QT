@@ -19,10 +19,36 @@ from selenium.webdriver.chrome.service import Service
 
 urls = ["https://openaccess.thecvf.com/CVPR2022?day=all",
         'https://openaccess.thecvf.com/CVPR2021?day=all',
-        'https://openaccess.thecvf.com/CVPR2020?day=2020-06-16']
-year = 2022
-conference = "cvpr"
-file_name = conference + '_' + str(year) + '.csv'
+        'https://openaccess.thecvf.com/CVPR2020?day=2020-06-16',
+        'https://openaccess.thecvf.com/CVPR2020?day=2020-06-17',
+        'https://openaccess.thecvf.com/CVPR2020?day=2020-06-18',
+        'https://openaccess.thecvf.com/CVPR2019?day=2019-06-18',
+        'https://openaccess.thecvf.com/CVPR2019?day=2019-06-19',
+        'https://openaccess.thecvf.com/CVPR2019?day=2019-06-20',
+        'https://openaccess.thecvf.com/CVPR2018?day=2018-06-19',
+        'https://openaccess.thecvf.com/CVPR2018?day=2018-06-20',
+        'https://openaccess.thecvf.com/CVPR2018?day=2018-06-21',
+        'https://openaccess.thecvf.com/CVPR2017',
+        'https://openaccess.thecvf.com/CVPR2016',
+        'https://openaccess.thecvf.com/CVPR2015',
+        'https://openaccess.thecvf.com/CVPR2014',
+        'https://openaccess.thecvf.com/CVPR2013',
+
+        'https://openaccess.thecvf.com/WACV2022',
+        'https://openaccess.thecvf.com/WACV2021',
+        'https://openaccess.thecvf.com/WACV2020',
+
+        'https://openaccess.thecvf.com/ICCV2021?day=all',
+        'https://openaccess.thecvf.com/ICCV2019?day=2019-10-29',
+        'https://openaccess.thecvf.com/ICCV2019?day=2019-10-30',
+        'https://openaccess.thecvf.com/ICCV2019?day=2019-10-31',
+        'https://openaccess.thecvf.com/ICCV2019?day=2019-11-01',
+        'https://openaccess.thecvf.com/ICCV2017',
+        'https://openaccess.thecvf.com/ICCV2015',
+        'https://openaccess.thecvf.com/ICCV2013'
+        ]
+
+file_name = 'conference.csv'
 root = r'D:\miniconda\Lib\site-packages\chromedriver.exe'
 
 chrome_options = webdriver.ChromeOptions()
@@ -46,19 +72,19 @@ for url in urls:
 
     titles = wd.find_elements(By.CLASS_NAME,"ptitle")
     for title in titles:
-        title_total.append(title.text)
-        
-        
+        title_name = title.text
+        conference = url[30:34]
+        year = url[34:38]
 
-print("The number of total accepted paper titles : ", len(title))
+        title_total.append(title_name)
+        conference_total.append(conference)
+        year_total.append(year)
+    print("The number of total accepted paper titles : ", len(title_total))
 
-lens = len(titles)
-year_arr = [year for i in range(lens)]
-conference_arr = [conference for i in range(lens)]
 data = {
-    'Title': titles,
-    'Year': year_arr,
-    'Conference': conference_arr,
+    'Title': title_total,
+    'Year': year_total,
+    'Conference': conference_total,
 }
 df = pd.DataFrame(data)
 df.to_csv(file_name,sep=',',index=False,header=True)
