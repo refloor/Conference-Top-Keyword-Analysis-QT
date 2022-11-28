@@ -16,36 +16,71 @@ class Stats:
         # 注意：里面的控件对象也成为窗口对象的属性了
         # 比如 self.ui.button , self.ui.textEdit
         self.ui = QUiLoader().load('conference.ui')
-        
-        #显示提示词
-        test = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
-        for word in test:
-            self.ui.textBrowser.append(word)
-        self.cursot = self.ui.textBrowser.textCursor()
-        self.ui.textBrowser.moveCursor(self.cursot.End)
-        QApplication.processEvents()
 
         #tab1 的按钮连接
         self.ui.pushButton.clicked.connect(self.handleCalc)
         # self.ui.comboBox_1.currentIndexChanged.connect(self.selectionchange)
         #self.ui.label_1
 
+        #tab2 显示提示词
+        self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
+        self.display_word()
+
+        #tab2 add banned word
+        self.ui.pushButton_3.clicked.connect(self.add_word)
+        #tab2 del banned word
+        self.ui.pushButton_5.clicked.connect(self.del_word)
+        # #tab3 展示词语数量
+        # self.ui.pushButton_6.clicked.connect(self.handleCalc)
+        # #tab3 提交表单
+        # self.ui.pushButton_2.clicked.connect(self.handleCalc)
+
     def handleCalc(self):
         year = self.ui.comboBox_1.currentText()
         conference = self.ui.comboBox_2.currentText()
-        drawgraph = DrawGraph(year,conference)
+        drawgraph = DrawGraph(year,conference,self.banned,self.num_keyowrd)
         drawgraph.compute_word()
         drawgraph.frequent_graph()
         drawgraph.word_cloud_graph()
         
+        #更新图片展示
         self.ui.label.update()
         self.ui.label.repaint()
         self.ui.tabWidget.update()
+    
+    def add_word(self):
+        word_obj = self.ui.lineEdit_4.text()
+        if(word_obj not in self.banned):
+            self.banned.append(word_obj)
+        self.display_word()
+
+    def del_word(self):
+        word_obj = self.ui.lineEdit_7.text()
+        if(word_obj in self.banned):
+            self.banned.remove(word_obj)
+        print(word_obj)
+        print(self.banned)
+        self.display_word()
+
+    def change_number(self):
+        word_number = self.ui.lineEdit_8.text()
+        self.num_keyowrd = word_number
+
+    def display_word(self):
+        self.ui.textBrowser.clear()
+        for word in self.banned:
+            self.ui.textBrowser.append(word)
+        self.cursot = self.ui.textBrowser.textCursor()
+        self.ui.textBrowser.moveCursor(self.cursot.End)
+        QApplication.processEvents()
+
 class DrawGraph:
 
-    def __init__(self,year,conference):
+    def __init__(self,year,conference,banned,num_keyowrd):
         self.year = year
         self.conference = conference
+        self.banned = banned
+        self.num_keyowrd = num_keyowrd
 
     def compute_word(self):
         file_name = self.conference + '_' + self.year + '.csv'
@@ -54,7 +89,7 @@ class DrawGraph:
         #转换为list
         title = df.values.tolist()
 
-        stopwords_deep_learning = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
+        self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
         
         self.keyword_list = []
 
@@ -66,7 +101,7 @@ class DrawGraph:
             word_list_cleaned = [] 
             for word in word_list: 
                 word = word.lower()
-                if word not in stopwords.words('english') and word not in stopwords_deep_learning: #remove stopwords
+                if word not in stopwords.words('english') and word not in self.banned: #remove stopwords
                     word_list_cleaned.append(word)  
             for k in range(len(word_list_cleaned)):
                 self.keyword_list.append(word_list_cleaned[k])
@@ -84,8 +119,8 @@ class DrawGraph:
 
     def frequent_graph(self):
         # Show N most common keywords and their frequencies
-        num_keyowrd = 30 #FIXME
-        keywords_counter_vis = self.keyword_counter.most_common(num_keyowrd)
+        self.num_keyowrd = 30 #FIXME
+        keywords_counter_vis = self.keyword_counter.most_common(self.num_keyowrd)
 
         plt.rcdefaults()
         fig, ax = plt.subplots(figsize=(8, 18))
@@ -100,7 +135,7 @@ class DrawGraph:
         for i, v in enumerate(value):
             ax.text(v + 3, i + .25, str(v), color='black', fontsize=10)
         ax.set_xlabel('Frequency')
-        ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, num_keyowrd))
+        ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyowrd))
         plt.savefig('frequent.png', transparent=False, bbox_inches='tight')
 
     def word_cloud_graph(self):
