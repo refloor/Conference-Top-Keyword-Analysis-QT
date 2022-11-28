@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtGui import QPalette, QBrush, QPixmap
 from pandas import read_csv
 import nltk
 nltk.download('stopwords')
@@ -30,15 +31,18 @@ class Stats:
         self.ui.pushButton_3.clicked.connect(self.add_word)
         #tab2 del banned word
         self.ui.pushButton_5.clicked.connect(self.del_word)
-        # #tab3 展示词语数量
-        # self.ui.pushButton_6.clicked.connect(self.handleCalc)
-        # #tab3 提交表单
-        # self.ui.pushButton_2.clicked.connect(self.handleCalc)
+        #tab3 展示词语数量
+        self.ui.pushButton_6.clicked.connect(self.change_number)
+        #tab3 提交表单
+        self.ui.pushButton_2.clicked.connect(self.handleCalc)
+        #二级下拉菜单 会议与年份对应
+        self.ui.comboBox_2.currentIndexChanged.connect(self.conference_menu)
 
     def handleCalc(self):
         year = self.ui.comboBox_1.currentText()
         conference = self.ui.comboBox_2.currentText()
-        drawgraph = DrawGraph(year,conference,self.banned,self.num_keyowrd)
+        self.num_keyword = self.ui.lineEdit_8.text()
+        drawgraph = DrawGraph(year,conference,self.banned,self.num_keyword)
         drawgraph.compute_word()
         drawgraph.frequent_graph()
         drawgraph.word_cloud_graph()
@@ -47,6 +51,7 @@ class Stats:
         self.ui.label.update()
         self.ui.label.repaint()
         self.ui.tabWidget.update()
+        self.graph_display()
     
     def add_word(self):
         word_obj = self.ui.lineEdit_4.text()
@@ -58,13 +63,11 @@ class Stats:
         word_obj = self.ui.lineEdit_7.text()
         if(word_obj in self.banned):
             self.banned.remove(word_obj)
-        print(word_obj)
-        print(self.banned)
         self.display_word()
 
     def change_number(self):
         word_number = self.ui.lineEdit_8.text()
-        self.num_keyowrd = word_number
+        self.num_keyword = word_number
 
     def display_word(self):
         self.ui.textBrowser.clear()
@@ -73,14 +76,34 @@ class Stats:
         self.cursot = self.ui.textBrowser.textCursor()
         self.ui.textBrowser.moveCursor(self.cursot.End)
         QApplication.processEvents()
+    
+    def conference_menu(self):
+        conference_index= self.ui.comboBox_2.currentIndex()
+        self.ui.comboBox_1.clear()
+        if(conference_index == 0):
+            years = {'2021'}
+            self.ui.comboBox_1.addItems(years)
+        if(conference_index == 1):
+            years = {'2019','2021'}
+            self.ui.comboBox_1.addItems(years)
+        if(conference_index == 2):
+            years = {'2020','2021','2022'}
+            self.ui.comboBox_1.addItems(years)
+        
+    def graph_display(self):
+        frequent = QPixmap('frequent.png')
+        self.ui.label.setPixmap(frequent)
+        wordcloud = QPixmap('wordcloud.png')
+        self.ui.label_2.setPixmap(wordcloud)
+
 
 class DrawGraph:
 
-    def __init__(self,year,conference,banned,num_keyowrd):
+    def __init__(self,year,conference,banned,num_keyword):
         self.year = year
         self.conference = conference
         self.banned = banned
-        self.num_keyowrd = num_keyowrd
+        self.num_keyword = num_keyword
 
     def compute_word(self):
         file_name = self.conference + '_' + self.year + '.csv'
@@ -89,7 +112,7 @@ class DrawGraph:
         #转换为list
         title = df.values.tolist()
 
-        self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
+        # self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
         
         self.keyword_list = []
 
@@ -119,8 +142,9 @@ class DrawGraph:
 
     def frequent_graph(self):
         # Show N most common keywords and their frequencies
-        self.num_keyowrd = 30 #FIXME
-        keywords_counter_vis = self.keyword_counter.most_common(self.num_keyowrd)
+        # self.num_keyword = 30 #FIXME
+        self.num_keyword = int(self.num_keyword)
+        keywords_counter_vis = self.keyword_counter.most_common(self.num_keyword)
 
         plt.rcdefaults()
         fig, ax = plt.subplots(figsize=(8, 18))
@@ -135,7 +159,7 @@ class DrawGraph:
         for i, v in enumerate(value):
             ax.text(v + 3, i + .25, str(v), color='black', fontsize=10)
         ax.set_xlabel('Frequency')
-        ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyowrd))
+        ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyword))
         plt.savefig('frequent.png', transparent=False, bbox_inches='tight')
 
     def word_cloud_graph(self):

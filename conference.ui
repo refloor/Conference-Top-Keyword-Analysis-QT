@@ -141,7 +141,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -162,6 +162,9 @@
       </property>
       <item>
        <widget class="QComboBox" name="comboBox_2">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
         <item>
          <property name="text">
           <string>CVPR</string>
@@ -181,29 +184,12 @@
       </item>
       <item>
        <widget class="QComboBox" name="comboBox_1">
-        <item>
-         <property name="text">
-          <string>2022</string>
-         </property>
-        </item>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
         <item>
          <property name="text">
           <string>2021</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2020</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2019</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>ALL</string>
          </property>
         </item>
        </widget>
@@ -220,7 +206,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Generation</string>
      </property>
     </widget>
    </widget>
@@ -415,7 +401,7 @@ hr { height: 1px; border-width: 0; }
       </rect>
      </property>
      <property name="text">
-      <string>PushButton</string>
+      <string>Generation</string>
      </property>
     </widget>
    </widget>
@@ -426,14 +412,14 @@ hr { height: 1px; border-width: 0; }
     <widget class="QLineEdit" name="lineEdit">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>180</y>
-       <width>111</width>
+       <x>20</x>
+       <y>210</y>
+       <width>171</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Coming Soon</string>
+      <string>Please check the document</string>
      </property>
     </widget>
    </widget>
