@@ -2,13 +2,13 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtGui import QPalette, QBrush, QPixmap
 from pandas import read_csv
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords
+# import nltk
+# nltk.download('stopwords')
+# from nltk.corpus import stopwords
 from collections import Counter
 import matplotlib.pyplot as plt 
 import numpy as np
-from wordcloud import WordCloud
+# from wordcloud import WordCloud
 class Stats:
     def __init__(self):
         # 从文件中加载UI定义
@@ -48,7 +48,7 @@ class Stats:
         drawgraph = DrawGraph(year,conference,self.banned,self.num_keyword,self.data)
         drawgraph.compute_word()
         drawgraph.frequent_graph()
-        drawgraph.word_cloud_graph()
+        # drawgraph.word_cloud_graph()
         
         #更新图片展示
         self.ui.label.update()
@@ -118,7 +118,8 @@ class DrawGraph:
         #转换为list
         title = title.values.tolist()
 
-        # self.banned = ['learning', 'network', 'neural', 'networks', 'deep', 'via', 'using', 'convolutional', 'single']
+        #from nltk.corpus import stopwords
+        stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
         
         self.keyword_list = []
         for i in range(len(title)):
@@ -129,7 +130,7 @@ class DrawGraph:
             word_list_cleaned = [] 
             for word in word_list: 
                 word = word.lower()
-                if word not in stopwords.words('english') and word not in self.banned: #remove stopwords
+                if word not in stopwords and word not in self.banned: #remove stopwords
                     word_list_cleaned.append(word)  
             for k in range(len(word_list_cleaned)):
                 self.keyword_list.append(word_list_cleaned[k])
@@ -167,17 +168,17 @@ class DrawGraph:
         ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyword))
         plt.savefig('./data/frequent.png', transparent=False, bbox_inches='tight')
 
-    def word_cloud_graph(self):
-        # Show the word cloud forming by keywords
+    # def word_cloud_graph(self):
+    #     # Show the word cloud forming by keywords
         
-        wordcloud = WordCloud(max_font_size=64, max_words=160, 
-                            width=1280, height=640,
-                            background_color="black").generate(' '.join(self.keyword_list))
-        plt.figure(figsize=(16, 8))
-        plt.imshow(wordcloud, interpolation="bilinear")
-        plt.axis("off")
-        plt.savefig('./data/wordcloud.png', transparent=False, bbox_inches='tight')
-        # plt.show()
+    #     wordcloud = WordCloud(max_font_size=64, max_words=160, 
+    #                         width=1280, height=640,
+    #                         background_color="black").generate(' '.join(self.keyword_list))
+    #     plt.figure(figsize=(16, 8))
+    #     plt.imshow(wordcloud, interpolation="bilinear")
+    #     plt.axis("off")
+    #     plt.savefig('./data/wordcloud.png', transparent=False, bbox_inches='tight')
+    #     # plt.show()
 
 # class WordList:
 #     def __init__(self):

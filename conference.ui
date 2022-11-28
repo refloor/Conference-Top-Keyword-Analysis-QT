@@ -83,7 +83,7 @@
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
-     <string>Word Cloud</string>
+     <string>Trend</string>
     </attribute>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
@@ -104,26 +104,17 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLineEdit" name="lineEdit_3">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>581</width>
-       <height>561</height>
+       <x>160</x>
+       <y>180</y>
+       <width>171</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>data/wordcloud.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-     <property name="wordWrap">
-      <bool>false</bool>
+      <string>On the way~</string>
      </property>
     </widget>
    </widget>
@@ -141,7 +132,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -189,7 +180,52 @@
         </property>
         <item>
          <property name="text">
+          <string>2022</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>2021</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2020</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2019</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2018</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2017</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2016</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2015</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2014</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>2013</string>
          </property>
         </item>
        </widget>
