@@ -108,7 +108,7 @@ class DrawGraph:
     def compute_word(self):
         file_name = self.conference + '_' + self.year + '.csv'
         #读取标题
-        df = read_csv(file_name,usecols = ['Title'])
+        df = read_csv('./data/'+file_name,usecols = ['Title'])
         #转换为list
         title = df.values.tolist()
 
