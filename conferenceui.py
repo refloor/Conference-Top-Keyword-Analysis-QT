@@ -85,13 +85,14 @@ class Stats:
         self.ui.comboBox_1.clear()
         if(conference_index == 0):
             years = {'2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'}
-            self.ui.comboBox_1.addItems(years)
+            #使用sorted使set按照顺序显示
+            self.ui.comboBox_1.addItems(sorted(years))
         if(conference_index == 1):
             years = {'2013','2015','2017','2019','2021'}
-            self.ui.comboBox_1.addItems(years)
+            self.ui.comboBox_1.addItems(sorted(years))
         if(conference_index == 2):
             years = {'2020','2021','2022'}
-            self.ui.comboBox_1.addItems(years)
+            self.ui.comboBox_1.addItems(sorted(years))
         
     def graph_display(self):
         frequent = QPixmap('./data/frequent.png')
