@@ -46,9 +46,8 @@ class Stats:
         conference = self.ui.comboBox_2.currentText()
         self.num_keyword = self.ui.lineEdit_8.text()
         drawgraph = DrawGraph(year,conference,self.banned,self.num_keyword,self.data)
-        drawgraph.compute_word()
         drawgraph.frequent_graph()
-        # drawgraph.word_cloud_graph()
+        drawgraph.paper_number_graph()
         
         #更新图片展示
         self.ui.label.update()
@@ -86,18 +85,18 @@ class Stats:
         if(conference_index == 0):
             years = {'2013','2014','2015','2016','2017','2018','2019','2020','2021','2022'}
             #使用sorted使set按照顺序显示
-            self.ui.comboBox_1.addItems(sorted(years))
+            self.ui.comboBox_1.addItems(sorted(years, reverse=True))
         if(conference_index == 1):
             years = {'2013','2015','2017','2019','2021'}
-            self.ui.comboBox_1.addItems(sorted(years))
+            self.ui.comboBox_1.addItems(sorted(years, reverse=True))
         if(conference_index == 2):
             years = {'2020','2021','2022'}
-            self.ui.comboBox_1.addItems(sorted(years))
+            self.ui.comboBox_1.addItems(sorted(years, reverse=True))
         
     def graph_display(self):
         frequent = QPixmap('./data/frequent.png')
         self.ui.label.setPixmap(frequent)
-        wordcloud = QPixmap('./data/wordcloud.png')
+        wordcloud = QPixmap('./data/number.png')
         self.ui.label_2.setPixmap(wordcloud)
 
 
@@ -108,9 +107,10 @@ class DrawGraph:
         self.conference = conference
         self.banned = banned
         self.num_keyword = num_keyword
+        self.num_keyword = int(self.num_keyword)
         self.data = data
 
-    def compute_word(self):
+    def compute_word(self, num_keyword):
         rule = "Year == " + self.year + "& Conference == \"" + self.conference+ "\""
         #读取标题
         data_object = self.data.query(rule)
@@ -147,11 +147,15 @@ class DrawGraph:
             self.keyword_counter[k] += self.keyword_counter[k+'s']
             del self.keyword_counter[k+'s']
 
+        keywords_counter_vis = self.keyword_counter.most_common(num_keyword)
+        return keywords_counter_vis
+
     def frequent_graph(self):
         # Show N most common keywords and their frequencies
         # self.num_keyword = 30 #FIXME
-        self.num_keyword = int(self.num_keyword)
-        keywords_counter_vis = self.keyword_counter.most_common(self.num_keyword)
+        # self.num_keyword = int(self.num_keyword)
+        # keywords_counter_vis = self.keyword_counter.most_common(self.num_keyword)
+        keywords_counter_vis = self.compute_word(self.num_keyword)
 
         plt.rcdefaults()
         fig, ax = plt.subplots(figsize=(8, 18))
@@ -168,7 +172,28 @@ class DrawGraph:
         ax.set_xlabel('Frequency')
         ax.set_title('{} {} Submission Top {} Keywords'.format(self.conference.upper(), self.year, self.num_keyword))
         plt.savefig('./data/frequent.png', transparent=False, bbox_inches='tight')
+    def paper_number_graph(self):
+        years = []
+        number = []
+        if(self.conference == 'CVPR'):
+            years = [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022]
+        if(self.conference == 'ICCV'):
+            years = [2013,2015,2017,2019,2021]
+        if(self.conference == 'WACV'):
+            years = [2020,2021,2022]
+            
+        for year in years:
+            rule = "Year == " + str(year) + "& Conference == \"" + self.conference+ "\""
+            number_object = self.data.query(rule)
+            number.append(number_object.shape[0])
 
+        plt.figure(figsize=(10,10))
+        plt.plot(years, number, marker='o')
+        plt.title(self.conference+" Trend of Paper Number")
+        plt.xticks(years)
+        for x,y in zip(years,number):
+            plt.text(x,y,'%.0f' % y,fontdict={'fontsize':14})
+        plt.savefig('./data/number.png', transparent=False, bbox_inches='tight')
     # def word_cloud_graph(self):
     #     # Show the word cloud forming by keywords
         

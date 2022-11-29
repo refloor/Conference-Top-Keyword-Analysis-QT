@@ -8,4 +8,6 @@ version 0.8 basic implement, include frequent bar graph and wordcloud graph
 
 version 0.9 delete wordcloud,because it function have bug when turn to .exe
 
-version 1.0 combo box can display the years as the order， thanks for @respACz proposed the issue
+version 1.0 combo box can display the years as the order, thanks for @respACz proposed the issue
+
+version 1.1 add the paper number trend of the conference

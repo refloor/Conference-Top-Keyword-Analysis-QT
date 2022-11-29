@@ -90,7 +90,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>581</width>
+       <width>561</width>
        <height>561</height>
       </rect>
      </property>
@@ -98,23 +98,10 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>test.jpg</pixmap>
+      <pixmap>data/number.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_3">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>180</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>On the way~</string>
      </property>
     </widget>
    </widget>
