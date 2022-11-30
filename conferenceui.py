@@ -206,9 +206,6 @@ class DrawGraph:
     #     plt.savefig('./data/wordcloud.png', transparent=False, bbox_inches='tight')
     #     # plt.show()
 
-# class WordList:
-#     def __init__(self):
-        
     
 
 
